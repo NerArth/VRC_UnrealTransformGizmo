@@ -1,0 +1,17 @@
+{
+  "name": "com.vrc.ue-gizmos",
+  "version": "1.0.0",
+  "displayName": "VRC UE-Style Transform Gizmos",
+  "description": "Unreal Engine style transform gizmos for Unity. Hold Ctrl + LMB/RMB/Both to transform objects.",
+  "unity": "2022.3",
+  "author": {
+    "name": "VRC"
+  },
+  "keywords": [
+    "editor",
+    "gizmo",
+    "unreal",
+    "transform"
+  ],
+  "dependencies": {}
+}
