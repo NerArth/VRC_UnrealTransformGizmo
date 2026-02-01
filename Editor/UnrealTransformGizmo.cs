@@ -118,9 +118,38 @@ namespace UEStyle.UEGizmos
 
             if (amount == 0) return;
 
+            // Calculate snap once for the whole selection to maintain relative positioning
+            bool hasSnapped = false;
+            float snappedAmount = 0;
+
+            switch (Tools.current)
+            {
+                case Tool.Move:
+                    float snapVal = axis.x != 0 ? EditorSnapSettings.move.x : (axis.y != 0 ? EditorSnapSettings.move.y : EditorSnapSettings.move.z);
+                    if (s_ShiftPressed) snapVal *= 0.1f;
+                    snappedAmount = ProcessSnap(ref s_TotalAccumulatedDelta.x, amount, snapVal);
+                    hasSnapped = Mathf.Abs(snappedAmount) > 0;
+                    break;
+                case Tool.Rotate:
+                    float rotateSnap = EditorSnapSettings.rotate;
+                    if (s_ShiftPressed) rotateSnap *= 0.1f;
+                    float rotAmount = amount * 100f; // Scale up for rotation feel
+                    snappedAmount = ProcessSnap(ref s_TotalAccumulatedDelta.y, rotAmount, rotateSnap);
+                    hasSnapped = Mathf.Abs(snappedAmount) > 0;
+                    break;
+                case Tool.Scale:
+                    float scaleSnap = EditorSnapSettings.scale / 100f;
+                    if (s_ShiftPressed) scaleSnap *= 0.1f;
+                    snappedAmount = ProcessSnap(ref s_TotalAccumulatedDelta.z, amount, scaleSnap);
+                    hasSnapped = Mathf.Abs(snappedAmount) > 0;
+                    break;
+            }
+
+            if (!hasSnapped) return;
+
             foreach (var t in Selection.transforms)
             {
-                ApplyByTool(t, axis, amount);
+                ApplyByTool(t, axis, snappedAmount);
             }
         }
 
@@ -132,22 +161,19 @@ namespace UEStyle.UEGizmos
             switch (Tools.current)
             {
                 case Tool.Move:
-                    float snapVal = EditorSnapSettings.move.x;
-                    float snapped = ProcessSnap(ref s_TotalAccumulatedDelta.x, amount, snapVal);
-                    if (Mathf.Abs(snapped) > 0) t.position += worldAxis * snapped;
+                    t.position += worldAxis * amount;
                     break;
                 case Tool.Rotate:
-                    float rotateSnap = EditorSnapSettings.rotate;
-                    float rotAmount = amount * 100f; // Scale up for rotation feel
-                    float snappedRot = ProcessSnap(ref s_TotalAccumulatedDelta.y, rotAmount, rotateSnap);
-                    if (Mathf.Abs(snappedRot) > 0) t.Rotate(worldAxis, snappedRot, Space.World);
+                    t.Rotate(worldAxis, amount, Space.World);
                     break;
                 case Tool.Scale:
-                    float scaleSnap = EditorSnapSettings.scale / 100f;
-                    float snappedScale = ProcessSnap(ref s_TotalAccumulatedDelta.z, amount, scaleSnap);
-                    if (Mathf.Abs(snappedScale) > 0)
+                    float f = 1.0f + amount;
+                    if (s_ProportionateScale)
                     {
-                        float f = 1.0f + snappedScale;
+                        t.localScale *= f;
+                    }
+                    else
+                    {
                         t.localScale = Vector3.Scale(t.localScale, new Vector3(
                             axis.x != 0 ? f : 1,
                             axis.y != 0 ? f : 1,
