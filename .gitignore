@@ -100,3 +100,6 @@ InitTestScene*.unity*
 
 # Python
 .venv
+
+# Releases (Meant to be local only)
+/Releases/
