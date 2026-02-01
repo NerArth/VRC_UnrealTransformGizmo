@@ -264,7 +264,7 @@ namespace UEStyle.UEGizmos
         }
 
         [EditorToolbarElement(ID, typeof(SceneView))]
-        class GizmoDropdown : EditorToolbarDropdown
+        class GizmoDropdown : EditorToolbarMenu
         {
             public const string ID = "UEStyleGizmoDropdown";
             private static Texture2D s_Icon;
@@ -297,31 +297,21 @@ namespace UEStyle.UEGizmos
                     text = "UE-Style Gizmo";
                 }
 
-                clicked += ShowDropdown;
+                // Initialize menu
+                menu.AppendAction("Enabled", _ => { UEStyleGizmo.Enabled = !UEStyleGizmo.Enabled; UpdateTooltip(); }, (UEStyleGizmo.Enabled ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                menu.AppendSeparator("");
+                menu.AppendAction("Use Snapping", _ => UEStyleGizmo.UseSnapping = !UEStyleGizmo.UseSnapping, (UEStyleGizmo.UseSnapping ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                menu.AppendAction("Proportionate Scale", _ => UEStyleGizmo.ProportionateScale = !UEStyleGizmo.ProportionateScale, (UEStyleGizmo.ProportionateScale ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                menu.AppendSeparator("");
+                menu.AppendAction("Sensitivity/0.5x", _ => UEStyleGizmo.Sensitivity = 0.5f, (UEStyleGizmo.Sensitivity == 0.5f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                menu.AppendAction("Sensitivity/1.0x", _ => UEStyleGizmo.Sensitivity = 1.0f, (UEStyleGizmo.Sensitivity == 1.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                menu.AppendAction("Sensitivity/2.0x", _ => UEStyleGizmo.Sensitivity = 2.0f, (UEStyleGizmo.Sensitivity == 2.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                menu.AppendAction("Sensitivity/5.0x", _ => UEStyleGizmo.Sensitivity = 5.0f, (UEStyleGizmo.Sensitivity == 5.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
             }
 
             private void UpdateTooltip()
             {
                 tooltip = $"UE-Style Gizmo Settings ({(UEStyleGizmo.Enabled ? "Enabled" : "Disabled")})";
-            }
-
-            void ShowDropdown()
-            {
-                GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("Enabled"), UEStyleGizmo.Enabled, () => { UEStyleGizmo.Enabled = !UEStyleGizmo.Enabled; UpdateTooltip(); });
-                menu.AddSeparator("");
-                menu.AddItem(new GUIContent("Use Snapping"), UEStyleGizmo.UseSnapping, () => UEStyleGizmo.UseSnapping = !UEStyleGizmo.UseSnapping);
-                menu.AddSeparator("Sensitivity/");
-                menu.AddItem(new GUIContent("Sensitivity/0.5x"), UEStyleGizmo.Sensitivity == 0.5f, () => UEStyleGizmo.Sensitivity = 0.5f);
-                menu.AddItem(new GUIContent("Sensitivity/1.0x"), UEStyleGizmo.Sensitivity == 1.0f, () => UEStyleGizmo.Sensitivity = 1.0f);
-                menu.AddItem(new GUIContent("Sensitivity/2.0x"), UEStyleGizmo.Sensitivity == 2.0f, () => UEStyleGizmo.Sensitivity = 2.0f);
-                menu.AddItem(new GUIContent("Sensitivity/5.0x"), UEStyleGizmo.Sensitivity == 5.0f, () => UEStyleGizmo.Sensitivity = 5.0f);
-
-                // Open directly under the button
-                Rect rect = worldBound;
-                Vector2 screenPos = GUIUtility.GUIToScreenPoint(new Vector2(rect.x, rect.yMax));
-                rect.position = screenPos;
-                menu.DropDown(rect);
             }
         }
     }
