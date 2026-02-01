@@ -226,7 +226,11 @@ namespace UEStyle.UEGizmos
     [Overlay(typeof(SceneView), "UE-Style Gizmos", true)]
     public class GizmoOverlay : ToolbarOverlay
     {
-        GizmoOverlay() : base(GizmoDropdown.ID) { }
+        GizmoOverlay() : base(GizmoDropdown.ID) 
+        {
+            defaultDockZone = DockZone.TopToolbar;
+            defaultLayout = Layout.HorizontalToolbar;
+        }
 
         [EditorToolbarElement(ID, typeof(SceneView))]
         class GizmoDropdown : EditorToolbarDropdown
@@ -236,7 +240,7 @@ namespace UEStyle.UEGizmos
 
             public GizmoDropdown()
             {
-                tooltip = "UE-Style Gizmo Settings";
+                UpdateTooltip();
                 
                 // Load Icon
                 if (s_Icon == null)
@@ -265,10 +269,15 @@ namespace UEStyle.UEGizmos
                 clicked += ShowDropdown;
             }
 
+            private void UpdateTooltip()
+            {
+                tooltip = $"UE-Style Gizmo Settings ({(UEStyleGizmo.Enabled ? "Enabled" : "Disabled")})";
+            }
+
             void ShowDropdown()
             {
                 GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("Enabled"), UEStyleGizmo.Enabled, () => UEStyleGizmo.Enabled = !UEStyleGizmo.Enabled);
+                menu.AddItem(new GUIContent("Enabled"), UEStyleGizmo.Enabled, () => { UEStyleGizmo.Enabled = !UEStyleGizmo.Enabled; UpdateTooltip(); });
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Use Snapping"), UEStyleGizmo.UseSnapping, () => UEStyleGizmo.UseSnapping = !UEStyleGizmo.UseSnapping);
                 menu.AddSeparator("Sensitivity/");
@@ -277,8 +286,10 @@ namespace UEStyle.UEGizmos
                 menu.AddItem(new GUIContent("Sensitivity/2.0x"), UEStyleGizmo.Sensitivity == 2.0f, () => UEStyleGizmo.Sensitivity = 2.0f);
                 menu.AddItem(new GUIContent("Sensitivity/5.0x"), UEStyleGizmo.Sensitivity == 5.0f, () => UEStyleGizmo.Sensitivity = 5.0f);
 
+                // Open directly under the button
                 Rect rect = worldBound;
-                rect.position = GUIUtility.GUIToScreenPoint(rect.position);
+                Vector2 screenPos = GUIUtility.GUIToScreenPoint(new Vector2(rect.x, rect.yMax));
+                rect.position = screenPos;
                 menu.DropDown(rect);
             }
         }
