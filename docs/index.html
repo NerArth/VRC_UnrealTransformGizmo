@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VRC SDK UE-Style Transform Gizmos - VPM Repository</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5865F2;
+            --background: #0f172a;
+            --text: #f8fafc;
+            --secondary: #334155;
+            --accent: #22d3ee;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            line-height: 1.6;
+            background: radial-gradient(circle at top left, #1e293b 0%, #0f172a 100%);
+        }
+        .container {
+            max-width: 650px;
+            width: 90%;
+            padding: 3rem;
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+        h1 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to bottom right, #ffffff 30%, #94a3b8 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+        p {
+            color: #94a3b8;
+            font-size: 1.125rem;
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .vcc-button {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 1.25rem 2.5rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+            font-size: 1.125rem;
+        }
+        .vcc-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(88, 101, 242, 0.4);
+            background-color: #4752c4;
+        }
+        .vcc-button:active {
+            transform: translateY(-1px);
+        }
+        .manual-section {
+            background: rgba(15, 23, 42, 0.4);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .manual-section small {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .copy-box {
+            background: rgba(2, 6, 23, 0.6);
+            padding: 0.875rem;
+            border-radius: 0.75rem;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            word-break: break-all;
+            color: #cbd5e1;
+            position: relative;
+        }
+        .copy-box:hover {
+            border-color: var(--accent);
+            background: rgba(2, 6, 23, 0.8);
+        }
+        .copy-box::after {
+            content: 'Click to copy';
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: var(--background);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        .copy-box:hover::after {
+            opacity: 1;
+        }
+        .footer {
+            margin-top: 3rem;
+            font-size: 0.875rem;
+            color: #475569;
+        }
+        a { color: var(--accent); text-decoration: none; font-weight: 600; }
+        a:hover { text-decoration: underline; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .container {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VPM Repository</h1>
+        <h2>VRC SDK UE-Style <br>Transform Gizmos</h2>
+        <p>Enhance your Unity workflow with Unreal Engine style transform shortcuts and precise snapping for VRChat SDK projects.</p>
+        
+        <a href="vcc://vpm/addRepo?url=https://nerarth.github.io/VRC_UnrealTransformGizmo/index.json" class="vcc-button">
+            Add to Creator Companion
+        </a>
+
+        <div class="manual-section">
+            <small>MANUAL INSTALLATION URL</small>
+            <div class="copy-box" id="copyBox">https://nerarth.github.io/VRC_UnrealTransformGizmo/index.json</div>
+        </div>
+
+        <div class="footer">
+            Developed by <a href="https://github.com/NerArth" target="_blank">NerArth</a> • 
+            <a href="https://github.com/NerArth/VRC_UnrealTransformGizmo" target="_blank">View on GitHub</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('copyBox').onclick = function() {
+            const el = document.createElement('textarea');
+            el.value = this.innerText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const original = this.innerText;
+            this.innerText = "COPIED TO CLIPBOARD!";
+            this.style.borderColor = "#22d3ee";
+            this.style.color = "#22d3ee";
+            
+            setTimeout(() => {
+                this.innerText = original;
+                this.style.borderColor = "";
+                this.style.color = "";
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
