@@ -102,4 +102,4 @@ InitTestScene*.unity*
 .venv
 
 # Releases (Meant to be local only)
-/Releases/
+.dev/Releases/
