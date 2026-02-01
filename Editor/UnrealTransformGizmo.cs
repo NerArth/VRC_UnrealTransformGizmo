@@ -228,8 +228,6 @@ namespace UEStyle.UEGizmos
     {
         GizmoOverlay() : base(GizmoDropdown.ID) 
         {
-            defaultDockZone = DockZone.TopToolbar;
-            defaultLayout = Layout.HorizontalToolbar;
         }
 
         [EditorToolbarElement(ID, typeof(SceneView))]
