@@ -1,5 +1,5 @@
 {
-    "name": "NerArth VPM Repository",
+    "name": "UE-Style Transform Gizmo",
     "author": "NerArth",
     "url": "https://nerarth.github.io/VRC_UnrealTransformGizmo/index.json",
     "packages": {
@@ -28,7 +28,7 @@
                     "vpmDependencies": {},
                     "dependencies": {},
                     "url": "https://github.com/NerArth/VRC_UnrealTransformGizmo/releases/download/v1.0.1/dev.nerarth.ue-gizmos-1.0.1.zip",
-                    "sha256": "421cbd1bf8a4fa814955069d4bd7bb21d9f7d8dcc1b04795cc8f6e8d414fe206"
+                    "sha256": "1f05c14c8874103907db499cce7477a18b70bc4861b3faef4dd5749d635e5ef1"
                 }
             }
         }
