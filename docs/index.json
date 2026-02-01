@@ -5,9 +5,9 @@
     "packages": {
         "dev.nerarth.ue-gizmos": {
             "versions": {
-                "1.0.2": {
+                "1.0.3": {
                     "name": "dev.nerarth.ue-gizmos",
-                    "version": "1.0.2",
+                    "version": "1.0.3",
                     "displayName": "VRC SDK UE-Style Transform Gizmos",
                     "description": "Transform gizmos in the style of Unreal Engine for Unity Editor, specifically for VRChat but may work for other purposes. Alters behaviour to allow Ctrl + LMB/RMB/Both to transform objects, so direct clicking on gizmo axis is not required.",
                     "unity": "2022.3",
@@ -27,8 +27,8 @@
                     ],
                     "vpmDependencies": {},
                     "dependencies": {},
-                    "url": "https://github.com/NerArth/VRC_UnrealTransformGizmo/releases/download/v1.0.2/dev.nerarth.ue-gizmos-1.0.2.zip",
-                    "sha256": "2a8a4a71b7e9b6c9e0c891a4988379738d40b80b34d42251aa0a707d2c3728e6"
+                    "url": "https://github.com/NerArth/VRC_UnrealTransformGizmo/releases/download/v1.0.3/dev.nerarth.ue-gizmos-1.0.3.zip",
+                    "sha256": "3e7cb8930a155ac54cb5af8b0197281ef6e6f898715e30aece4cc0ad9b27962a"
                 }
             }
         }
