@@ -16,11 +16,13 @@ namespace UEStyle.UEGizmos
         private static bool s_Enabled = true;
         private static float s_Sensitivity = 1.0f;
         private static bool s_UseSnapping = true;
+        private static bool s_ProportionateScale = true;
         private static Vector3 s_TotalAccumulatedDelta = Vector3.zero;
         private static bool s_LMB = false;
         private static bool s_RMB = false;
         private static bool s_IsDragging = false;
         private static Vector2 s_LastMousePosition;
+        private static bool s_ShiftPressed = false;
 
         static UEStyleGizmo()
         {
@@ -33,6 +35,7 @@ namespace UEStyle.UEGizmos
             s_Enabled = EditorPrefs.GetBool(PrefPrefix + "Enabled", true);
             s_Sensitivity = EditorPrefs.GetFloat(PrefPrefix + "Sensitivity", 1.0f);
             s_UseSnapping = EditorPrefs.GetBool(PrefPrefix + "UseSnapping", true);
+            s_ProportionateScale = EditorPrefs.GetBool(PrefPrefix + "ProportionateScale", true);
         }
 
         public static void SaveSettings()
@@ -40,6 +43,7 @@ namespace UEStyle.UEGizmos
             EditorPrefs.SetBool(PrefPrefix + "Enabled", s_Enabled);
             EditorPrefs.SetFloat(PrefPrefix + "Sensitivity", s_Sensitivity);
             EditorPrefs.SetBool(PrefPrefix + "UseSnapping", s_UseSnapping);
+            EditorPrefs.SetBool(PrefPrefix + "ProportionateScale", s_ProportionateScale);
         }
 
         private static void OnSceneGUI(SceneView sceneView)
@@ -48,6 +52,7 @@ namespace UEStyle.UEGizmos
 
             Event e = Event.current;
             bool modifierPressed = e.control;
+            s_ShiftPressed = e.shift;
 
             if (e.type == EventType.MouseDown && modifierPressed)
             {
@@ -171,6 +176,7 @@ namespace UEStyle.UEGizmos
         public static bool Enabled { get => s_Enabled; set { s_Enabled = value; SaveSettings(); } }
         public static float Sensitivity { get => s_Sensitivity; set { s_Sensitivity = value; SaveSettings(); } }
         public static bool UseSnapping { get => s_UseSnapping; set { s_UseSnapping = value; SaveSettings(); } }
+        public static bool ProportionateScale { get => s_ProportionateScale; set { s_ProportionateScale = value; SaveSettings(); } }
 
         [SettingsProvider]
         public static SettingsProvider CreateSettingsProvider()
@@ -184,6 +190,7 @@ namespace UEStyle.UEGizmos
                     s_Enabled = EditorGUILayout.Toggle("Enabled", s_Enabled);
                     s_Sensitivity = EditorGUILayout.Slider("Sensitivity", s_Sensitivity, 0.1f, 5.0f);
                     s_UseSnapping = EditorGUILayout.Toggle("Use Snapping", s_UseSnapping);
+                    s_ProportionateScale = EditorGUILayout.Toggle("Proportionate Scale", s_ProportionateScale);
 
                     EditorGUILayout.Space();
                     if (GUILayout.Button("Remove Package Content (Cleanup)"))
