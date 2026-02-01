@@ -64,10 +64,35 @@ def main():
 
     create_package(release_dir, package_info)
 
-    # Post-process: Replace generated files with root equivalents
+    # Post-process: Replace generated files with root equivalents and copy source
     import shutil
     import zipfile
     import hashlib
+
+    print("Copying source code to release...")
+    source_editor = project_root / "Editor"
+    target_editor = release_dir / "Editor"
+    if source_editor.exists():
+        for item in source_editor.iterdir():
+            if item.is_dir():
+                shutil.copytree(item, target_editor / item.name, dirs_exist_ok=True)
+            elif item.suffix != ".asmdef": # Keep generated asmdef
+                shutil.copy2(item, target_editor / item.name)
+
+    print("Fixing Editor assembly definition...")
+    # Find the generated editor asmdef
+    package_name_without_ext = ".".join(package_info.name.split('.')[1:])
+    asmdef_path = target_editor / f"{package_name_without_ext}.Editor.asmdef"
+    
+    if asmdef_path.exists():
+        with open(asmdef_path, "r") as f:
+            asmdef_data = json.load(f)
+        
+        # Restrict to Editor platform
+        asmdef_data["includePlatforms"] = ["Editor"]
+        
+        with open(asmdef_path, "w") as f:
+            json.dump(asmdef_data, f, indent=4)
 
     print("Replacing generated README and LICENSE with root versions...")
     
