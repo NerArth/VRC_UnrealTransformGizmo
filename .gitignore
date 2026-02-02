@@ -103,3 +103,5 @@ InitTestScene*.unity*
 
 # Releases (Meant to be local only)
 .dev/Releases/
+bin/Debug/
+bin/Release/
