@@ -264,13 +264,16 @@ namespace UEStyle.UEGizmos
         }
 
         [EditorToolbarElement(ID, typeof(SceneView))]
-        class GizmoDropdown : EditorToolbarMenu
+        class GizmoDropdown : ToolbarMenu
         {
             public const string ID = "UEStyleGizmoDropdown";
             private static Texture2D s_Icon;
 
             public GizmoDropdown()
             {
+                // Apply toolbar dropdown styling to fit in with other Scene View toolbar items
+                AddToClassList(EditorToolbarDropdown.ussClassName);
+                
                 UpdateTooltip();
                 
                 // Load Icon
@@ -297,16 +300,31 @@ namespace UEStyle.UEGizmos
                     text = "UE-Style Gizmo";
                 }
 
-                // Initialize menu
-                menu.AppendAction("Enabled", _ => { UEStyleGizmo.Enabled = !UEStyleGizmo.Enabled; UpdateTooltip(); }, (UEStyleGizmo.Enabled ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                // Initialize menu using the native DropdownMenu system
+                menu.AppendAction("Enabled", _ => { UEStyleGizmo.Enabled = !UEStyleGizmo.Enabled; UpdateTooltip(); }, 
+                    _ => (UEStyleGizmo.Enabled ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                
                 menu.AppendSeparator("");
-                menu.AppendAction("Use Snapping", _ => UEStyleGizmo.UseSnapping = !UEStyleGizmo.UseSnapping, (UEStyleGizmo.UseSnapping ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
-                menu.AppendAction("Proportionate Scale", _ => UEStyleGizmo.ProportionateScale = !UEStyleGizmo.ProportionateScale, (UEStyleGizmo.ProportionateScale ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                
+                menu.AppendAction("Use Snapping", _ => UEStyleGizmo.UseSnapping = !UEStyleGizmo.UseSnapping, 
+                    _ => (UEStyleGizmo.UseSnapping ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                
+                menu.AppendAction("Proportionate Scale", _ => UEStyleGizmo.ProportionateScale = !UEStyleGizmo.ProportionateScale, 
+                    _ => (UEStyleGizmo.ProportionateScale ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                
                 menu.AppendSeparator("");
-                menu.AppendAction("Sensitivity/0.5x", _ => UEStyleGizmo.Sensitivity = 0.5f, (UEStyleGizmo.Sensitivity == 0.5f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
-                menu.AppendAction("Sensitivity/1.0x", _ => UEStyleGizmo.Sensitivity = 1.0f, (UEStyleGizmo.Sensitivity == 1.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
-                menu.AppendAction("Sensitivity/2.0x", _ => UEStyleGizmo.Sensitivity = 2.0f, (UEStyleGizmo.Sensitivity == 2.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
-                menu.AppendAction("Sensitivity/5.0x", _ => UEStyleGizmo.Sensitivity = 5.0f, (UEStyleGizmo.Sensitivity == 5.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                
+                menu.AppendAction("Sensitivity/0.5x", _ => UEStyleGizmo.Sensitivity = 0.5f, 
+                    _ => (UEStyleGizmo.Sensitivity == 0.5f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                
+                menu.AppendAction("Sensitivity/1.0x", _ => UEStyleGizmo.Sensitivity = 1.0f, 
+                    _ => (UEStyleGizmo.Sensitivity == 1.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                
+                menu.AppendAction("Sensitivity/2.0x", _ => UEStyleGizmo.Sensitivity = 2.0f, 
+                    _ => (UEStyleGizmo.Sensitivity == 2.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                
+                menu.AppendAction("Sensitivity/5.0x", _ => UEStyleGizmo.Sensitivity = 5.0f, 
+                    _ => (UEStyleGizmo.Sensitivity == 5.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
             }
 
             private void UpdateTooltip()
