@@ -264,7 +264,7 @@ namespace UEStyle.UEGizmos
         }
 
         [EditorToolbarElement(ID, typeof(SceneView))]
-        class GizmoDropdown : ToolbarMenu
+        class GizmoDropdown : EditorToolbarDropdown
         {
             public const string ID = "UEStyleGizmoDropdown";
             private static Texture2D s_Icon;
