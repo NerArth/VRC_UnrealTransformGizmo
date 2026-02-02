@@ -9,11 +9,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #5865F2;
-            --background: #0f172a;
+            --primary: #492711;
+            --background: #2a0f0f;
             --text: #f8fafc;
-            --secondary: #334155;
-            --accent: #22d3ee;
+            --secondary: #554533;
+            --accent: #ee8f22;
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -25,13 +25,13 @@
             min-height: 100vh;
             margin: 0;
             line-height: 1.6;
-            background: radial-gradient(circle at top left, #1e293b 0%, #0f172a 100%);
+            background: radial-gradient(circle at top left, #3b241e 0%, #2a0f0f 100%);
         }
         .container {
             max-width: 650px;
             width: 90%;
             padding: 3rem;
-            background: rgba(30, 41, 59, 0.4);
+            background: rgba(59, 41, 30, 0.4);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-radius: 2rem;
@@ -52,7 +52,7 @@
             font-weight: 800;
             margin-top: 0;
             margin-bottom: 1.5rem;
-            background: linear-gradient(to bottom right, #ffffff 30%, #94a3b8 100%);
+            background: linear-gradient(to bottom right, #ffffff 30%, #b8b394 100%);
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -81,8 +81,8 @@
         }
         .vcc-button:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(88, 101, 242, 0.4);
-            background-color: #4752c4;
+            box-shadow: 0 20px 25px -5px rgba(242, 137, 88, 0.4);
+            background-color: #c46a47;
         }
         .vcc-button:active {
             transform: translateY(-1px);
@@ -96,7 +96,7 @@
         .manual-section small {
             display: block;
             margin-bottom: 0.75rem;
-            color: #64748b;
+            color: #8b8264;
             font-weight: 600;
         }
         .copy-box {
@@ -138,7 +138,7 @@
         .footer {
             margin-top: 3rem;
             font-size: 0.875rem;
-            color: #475569;
+            color: #695e47;
         }
         a { color: var(--accent); text-decoration: none; font-weight: 600; }
         a:hover { text-decoration: underline; }
@@ -184,8 +184,8 @@
 
             const original = this.innerText;
             this.innerText = "COPIED TO CLIPBOARD!";
-            this.style.borderColor = "#22d3ee";
-            this.style.color = "#22d3ee";
+            this.style.borderColor = "#ee8f22";
+            this.style.color = "#ee8f22";
             
             setTimeout(() => {
                 this.innerText = original;
