@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+  <ui:VisualElement class="gizmo-popup-root">
+    <ui:Toggle name="enabledToggle" text="Enabled" />
+    <ui:Toggle name="useSnappingToggle" text="Use Snapping" />
+    <ui:Toggle name="proportionateToggle" text="Proportionate Scale" />
+
+    <ui:Label text="Sensitivity" class="section-label" />
+    <ui:Slider name="sensitivitySlider" low="0.1" high="5.0" />
+
+    <ui:VisualElement name="sensitivityButtonsRow" class="button-row" />
+
+    <ui:Foldout name="advancedFoldout" text="Advanced">
+      <ui:Button name="restoreButton" text="Restore Defaults" />
+      <ui:Button name="openSettingsButton" text="Open Settings..." />
+    </ui:Foldout>
+  </ui:VisualElement>
+</ui:UXML>

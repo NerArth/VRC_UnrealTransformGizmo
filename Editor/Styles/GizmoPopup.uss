@@ -1,0 +1,24 @@
+.gizmo-popup-root {
+  padding-left: 8px;
+  padding-top: 6px;
+  padding-right: 8px;
+  width: 320px;
+}
+
+.section-label {
+  unity-font-style: bold;
+  margin-top: 6px;
+}
+
+.button-row {
+  flex-direction: row;
+  margin-top: 6px;
+}
+
+.gizmo-popup-root > .unity-toggle {
+  margin-top: 4px;
+}
+
+.gizmo-popup-root .unity-button {
+  margin-right: 4px;
+}

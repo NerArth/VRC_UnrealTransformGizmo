@@ -300,36 +300,95 @@ namespace UEStyle.UEGizmos
                     text = "UE-Style Gizmo";
                 }
 
-                // Initialize menu using the native DropdownMenu system
-                menu.AppendAction("Enabled", _ => { UEStyleGizmo.Enabled = !UEStyleGizmo.Enabled; UpdateTooltip(); }, 
-                    _ => (UEStyleGizmo.Enabled ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
-                
-                menu.AppendSeparator("");
-                
-                menu.AppendAction("Use Snapping", _ => UEStyleGizmo.UseSnapping = !UEStyleGizmo.UseSnapping, 
-                    _ => (UEStyleGizmo.UseSnapping ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
-                
-                menu.AppendAction("Proportionate Scale", _ => UEStyleGizmo.ProportionateScale = !UEStyleGizmo.ProportionateScale, 
-                    _ => (UEStyleGizmo.ProportionateScale ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
-                
-                menu.AppendSeparator("");
-                
-                menu.AppendAction("Sensitivity/0.5x", _ => UEStyleGizmo.Sensitivity = 0.5f, 
-                    _ => (UEStyleGizmo.Sensitivity == 0.5f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
-                
-                menu.AppendAction("Sensitivity/1.0x", _ => UEStyleGizmo.Sensitivity = 1.0f, 
-                    _ => (UEStyleGizmo.Sensitivity == 1.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
-                
-                menu.AppendAction("Sensitivity/2.0x", _ => UEStyleGizmo.Sensitivity = 2.0f, 
-                    _ => (UEStyleGizmo.Sensitivity == 2.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
-                
-                menu.AppendAction("Sensitivity/5.0x", _ => UEStyleGizmo.Sensitivity = 5.0f, 
-                    _ => (UEStyleGizmo.Sensitivity == 5.0f ? DropdownMenuAction.Status.Checked : DropdownMenuAction.Status.Normal));
+                // Show a UI Toolkit EditorWindow popup when the dropdown is clicked
+                this.AddManipulator(new Clickable(() => {
+                    var r = this.worldBound;
+                    GizmoPopupWindow.Show(new Rect(r.x, r.y + r.height, r.width, 0), UpdateTooltip);
+                }));
             }
 
             private void UpdateTooltip()
             {
                 tooltip = $"UE-Style Gizmo Settings ({(UEStyleGizmo.Enabled ? "Enabled" : "Disabled")})";
+            }
+
+            // PopupWindowContent that builds a UIElements-based popup matching Unity's toolbar popups
+            private class GizmoPopup : PopupWindowContent
+            {
+                private readonly System.Action onChanged;
+                public GizmoPopup(System.Action onChanged) { this.onChanged = onChanged; }
+                public override Vector2 GetWindowSize() => new Vector2(320, 220);
+
+                private bool _advOpen = false;
+
+                public override void OnGUI(Rect rect)
+                {
+                    GUILayout.BeginVertical();
+                    GUILayout.Space(2);
+
+                    bool newEnabled = EditorGUILayout.Toggle("Enabled", UEStyleGizmo.Enabled);
+                    if (newEnabled != UEStyleGizmo.Enabled)
+                    {
+                        UEStyleGizmo.Enabled = newEnabled;
+                        UEStyleGizmo.SaveSettings();
+                        onChanged?.Invoke();
+                    }
+
+                    bool newSnapping = EditorGUILayout.Toggle("Use Snapping", UEStyleGizmo.UseSnapping);
+                    if (newSnapping != UEStyleGizmo.UseSnapping)
+                    {
+                        UEStyleGizmo.UseSnapping = newSnapping;
+                        UEStyleGizmo.SaveSettings();
+                    }
+
+                    bool newProp = EditorGUILayout.Toggle("Proportionate Scale", UEStyleGizmo.ProportionateScale);
+                    if (newProp != UEStyleGizmo.ProportionateScale)
+                    {
+                        UEStyleGizmo.ProportionateScale = newProp;
+                        UEStyleGizmo.SaveSettings();
+                    }
+
+                    EditorGUILayout.LabelField("Sensitivity", EditorStyles.boldLabel);
+                    float newSens = EditorGUILayout.Slider(UEStyleGizmo.Sensitivity, 0.1f, 5.0f);
+                    if (!Mathf.Approximately(newSens, UEStyleGizmo.Sensitivity))
+                    {
+                        UEStyleGizmo.Sensitivity = newSens;
+                        UEStyleGizmo.SaveSettings();
+                    }
+
+                    GUILayout.BeginHorizontal();
+                    foreach (var v in new float[] { 0.5f, 1.0f, 2.0f, 5.0f })
+                    {
+                        if (GUILayout.Button(v.ToString("0.##") + "x", GUILayout.ExpandWidth(false)))
+                        {
+                            UEStyleGizmo.Sensitivity = v;
+                            UEStyleGizmo.SaveSettings();
+                            newSens = v;
+                        }
+                    }
+                    GUILayout.EndHorizontal();
+
+                    _advOpen = EditorGUILayout.Foldout(_advOpen, "Advanced");
+                    if (_advOpen)
+                    {
+                        if (GUILayout.Button("Restore Defaults"))
+                        {
+                            UEStyleGizmo.Enabled = true;
+                            UEStyleGizmo.Sensitivity = 1.0f;
+                            UEStyleGizmo.UseSnapping = true;
+                            UEStyleGizmo.ProportionateScale = true;
+                            UEStyleGizmo.SaveSettings();
+                            onChanged?.Invoke();
+                        }
+
+                        if (GUILayout.Button("Open Settings..."))
+                        {
+                            SettingsService.OpenProjectSettings("Project/VRC UE-Style Gizmos");
+                        }
+                    }
+
+                    GUILayout.EndVertical();
+                }
             }
         }
     }
