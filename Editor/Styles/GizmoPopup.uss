@@ -6,7 +6,7 @@
 }
 
 .section-label {
-  unity-font-style: bold;
+  -unity-font-style: bold;
   margin-top: 6px;
 }
 
