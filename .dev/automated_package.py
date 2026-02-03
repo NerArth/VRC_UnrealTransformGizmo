@@ -11,6 +11,10 @@ project_root = script_dir.parent
 cup_path = project_root / ".venv" / "cup-cloned"
 sys.path.append(str(cup_path))
 
+# Set to True to include .asmdef files in the release. Default is False.
+# Manually set this constant to True when you want .asmdef files preserved in the release.
+INCLUDE_ASMDEF = False
+
 try:
     from create_unity_package.create_unity_package import AuthorInfo, PackageInfo, create_package
 except ImportError as e:
@@ -30,11 +34,11 @@ def main():
     author_data = data.get("author", {})
     if isinstance(author_data, str):
         # Handle string author if necessary, though package.json here has an object
-        author = AuthorInfo(name=author_data, email="")
+        author = AuthorInfo(name=author_data, email="not@real.adr") # Fallback email to avoid errors from empty string
     else:
         author = AuthorInfo(
             name=author_data.get("name", "Unknown"),
-            email=author_data.get("email", ""),
+            email=author_data.get("email", "not@real.adr"), # Fallback email to avoid errors from empty string
             url=author_data.get("url", "")
         )
 
@@ -65,6 +69,7 @@ def main():
     create_package(release_dir, package_info)
 
     # Post-process: Replace generated files with root equivalents and copy source
+    print(f"INCLUDE_ASMDEF = {INCLUDE_ASMDEF}")
     import shutil
     import zipfile
     import hashlib
@@ -76,23 +81,23 @@ def main():
         for item in source_editor.iterdir():
             if item.is_dir():
                 shutil.copytree(item, target_editor / item.name, dirs_exist_ok=True)
-            elif item.suffix != ".asmdef": # Keep generated asmdef
+            elif (item.suffix != ".asmdef") or INCLUDE_ASMDEF: # Copy .asmdef only if INCLUDE_ASMDEF=True
                 shutil.copy2(item, target_editor / item.name)
 
-    print("Fixing Editor assembly definition...")
-    # Find the generated editor asmdef
-    package_name_without_ext = ".".join(package_info.name.split('.')[1:])
-    asmdef_path = target_editor / f"{package_name_without_ext}.Editor.asmdef"
-    
-    if asmdef_path.exists():
-        with open(asmdef_path, "r") as f:
-            asmdef_data = json.load(f)
-        
-        # Restrict to Editor platform
-        asmdef_data["includePlatforms"] = ["Editor"]
-        
-        with open(asmdef_path, "w") as f:
-            json.dump(asmdef_data, f, indent=4)
+    if not INCLUDE_ASMDEF:
+        print("Removing generated .asmdef files from release...")
+        # Ensure no .asmdef files are included in the release (remove any created by the tool)
+        for root, dirs, files in os.walk(release_dir):
+            for file in files:
+                if file.endswith(".asmdef"):
+                    path_to_remove = os.path.join(root, file)
+                    try:
+                        os.remove(path_to_remove)
+                        print(f"Removed {path_to_remove}")
+                    except OSError as e:
+                        print(f"Warning: Could not remove {path_to_remove}: {e}")
+    else:
+        print("Preserving .asmdef files in release (INCLUDE_ASMDEF=True)")
 
     print("Replacing generated README and LICENSE with root versions...")
     
@@ -114,6 +119,8 @@ def main():
     with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for root, dirs, files in os.walk(release_dir):
             for file in files:
+                if (not INCLUDE_ASMDEF) and file.endswith(".asmdef"):
+                    continue
                 file_path = os.path.join(root, file)
                 arcname = os.path.relpath(file_path, release_dir)
                 zipf.write(file_path, arcname)
