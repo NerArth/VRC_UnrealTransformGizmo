@@ -56,9 +56,10 @@ if ($Interactive) {
     $packageJson = Get-Content ".\package.json" | ConvertFrom-Json
     $version = $packageJson.version
     Write-Host "`nNext steps to publish:" -ForegroundColor Yellow
-    Write-Host "1. Git: git add . ; git commit -m 'Release v$version'" -ForegroundColor Gray
-    Write-Host "2. Tag: git tag -a v$version -m 'Release v$version' ; git push origin v$version" -ForegroundColor Gray
-    Write-Host "3. GitHub: Upload the ZIP from .dev/Releases/ to the GitHub release page." -ForegroundColor Gray
+    # I think we can skip the original first step since we logically do all that already and it's a bit redundant
+    # Write-Host "1. Git: git add . ; git commit -m 'Release v$version'" -ForegroundColor Gray
+    Write-Host "1. Tag: git tag -a v$version -m 'Release v$version' ; git push origin v$version" -ForegroundColor Gray
+    Write-Host "2. GitHub: Upload the ZIP from .dev/Releases/ to the GitHub release page." -ForegroundColor Gray
 }
 
 Write-Host "Release preparation complete." -ForegroundColor Green
