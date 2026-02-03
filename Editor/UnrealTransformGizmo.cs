@@ -303,7 +303,23 @@ namespace UEStyle.UEGizmos
                 // Show a UI Toolkit EditorWindow popup when the dropdown is clicked
                 this.AddManipulator(new Clickable(() => {
                     var r = this.worldBound;
-                    GizmoPopupWindow.Show(new Rect(r.x, r.y + r.height, r.width, 0), UpdateTooltip);
+
+                    // Preferred: convert GUI coordinates to screen coordinates using GUIUtility
+                    // Reference: https://docs.unity3d.com/ScriptReference/GUIUtility.GUIToScreenPoint.html
+                    Vector2 screenPos = GUIUtility.GUIToScreenPoint(new Vector2(r.x, r.y));
+                    var anchor = new Rect(screenPos.x, screenPos.y + r.height, r.width, r.height);
+
+                    // Fallback: if for some reason GUIUtility is unavailable at runtime, use SceneView position
+                    // (keeps behavior robust across different editor contexts).
+#if !UNITY_2020_1_OR_NEWER // keep compile paths flexible (non-exhaustive guard)
+                    if (SceneView.lastActiveSceneView != null)
+                    {
+                        var svPos = SceneView.lastActiveSceneView.position;
+                        anchor = new Rect(svPos.x + r.x, svPos.y + r.y + r.height, r.width, r.height);
+                    }
+#endif
+
+                    GizmoPopupWindow.Show(anchor, UpdateTooltip);
                 }));
             }
 
