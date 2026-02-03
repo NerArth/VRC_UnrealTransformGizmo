@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v4
         with:
           path: 'docs'       # the folder to publish (change if you build to a different folder)
 
